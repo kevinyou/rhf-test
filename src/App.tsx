@@ -1,33 +1,50 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { SubmitHandler, useForm } from 'react-hook-form'
+// import './App.css'
+
+type Foo = {
+  firstName: string;
+  lastName: string;
+  smoking: boolean;
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Foo>();
+
+  const onSubmit: SubmitHandler<Foo> = (data) => console.log(data);
 
   return (
     <>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <label>
+            First Name:
+          </label>
+          <input {...register('firstName')} />
+
+          <label>
+            Last Name:
+          </label>
+          <input {...register('lastName', { required: true })} />
+          {errors.lastName && <span>This field is required</span>}
+
+          <span>Do you Smoke?</span>
+          <label>
+            <input type='radio' id='field-smoking-yes' value='yes' {...register('smoking', { required: true })}/>
+            Yes
+          </label>
+          <label>
+            <input type='radio' id='field-smoking-no' value='no' {...register('smoking', { required: true } )}/>
+            No
+          </label>
+          {errors.smoking && <span>This field is required</span>}
+
+          <input type="submit" />
+        </form>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
