@@ -1,3 +1,4 @@
+import { TextField } from '@mui/material';
 import { SubmitHandler, useForm } from 'react-hook-form'
 // import './App.css'
 
@@ -20,16 +21,8 @@ function App() {
     <>
       <div>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <label>
-            First Name:
-          </label>
-          <input {...register('firstName')} />
-
-          <label>
-            Last Name:
-          </label>
-          <input {...register('lastName', { required: true })} />
-          {errors.lastName && <span>This field is required</span>}
+          <TextField label='First Name' {...register('firstName')}/>
+          <TextField label='Last Name' {...register('lastName', { required: true })} helperText={errors.lastName && 'This field is required'} />
 
           <span>Do you Smoke?</span>
           <label>
