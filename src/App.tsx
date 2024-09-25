@@ -1,6 +1,6 @@
 import { FormControl, FormControlLabel, FormHelperText, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
 import { useEffect } from 'react';
-import { Controller, SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
+import { Controller, FormProvider, SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
 // import './App.css'
 
 type Foo = {
@@ -16,19 +16,20 @@ type Foo = {
 }
 
 function App() {
-  const {
-    control,
-    register,
-    handleSubmit,
-    formState: { errors },
-    watch,
-  } = useForm<Foo>({
+  const methods = useForm<Foo>({
     defaultValues: {
       firstName: 'Bob',
       medicalProfile: {},
       pets: [],
     }
   });
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = methods;
 
   const { fields: petFields, append: appendPets } = useFieldArray({
     control,
@@ -45,7 +46,7 @@ function App() {
   }, [watch])
 
   return (
-    <>
+    <FormProvider {...methods}>
       <div>
         <form>
           <TextField label='First Name' {...register('firstName')}/>
@@ -81,7 +82,7 @@ function App() {
           <input type="submit" onClick={handleSubmit(onSubmit)}/>
         </form>
       </div>
-    </>
+    </FormProvider>
   )
 }
 
