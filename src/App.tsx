@@ -1,13 +1,18 @@
 import { FormControl, FormControlLabel, FormHelperText, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
 import { useEffect } from 'react';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import { Controller, SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
 // import './App.css'
 
 type Foo = {
   firstName: string;
   lastName: string;
-  smoking: 'yes' | 'no';
-  smokingx: 'yes' | 'no';
+  medicalProfile: {
+    smoking: 'yes' | 'no';
+  };
+  pets: {
+    name: string,
+    animal: 'dog';
+  }[];
 }
 
 function App() {
@@ -20,7 +25,14 @@ function App() {
   } = useForm<Foo>({
     defaultValues: {
       firstName: 'Bob',
+      medicalProfile: {},
+      pets: [],
     }
+  });
+
+  const { fields: petFields, append: appendPets } = useFieldArray({
+    control,
+    name: 'pets',
   });
 
   const onSubmit: SubmitHandler<Foo> = (data) => console.log(data);
@@ -42,7 +54,7 @@ function App() {
           <FormControl>
             <FormLabel>Do you Smoke?</FormLabel>
             <Controller
-              name="smoking"
+              name="medicalProfile.smoking"
               control={control}
               rules={{ required: 'This field is required' }}
               render={({ field }) => (
@@ -52,7 +64,18 @@ function App() {
                 </RadioGroup>
               )}
             />
-            {errors.smoking && <FormHelperText>{errors.smoking.message}</FormHelperText>}
+            {errors.medicalProfile?.smoking && <FormHelperText>{errors.medicalProfile.smoking.message}</FormHelperText>}
+            <div>
+              {
+                petFields.map((petField, index) => (
+                  <div>
+                    Pet #{index + 1}
+                    <input key={petField.id} type='text' {...register(`pets.${index}.name`)}/>
+                  </div>
+                ))
+              }
+              <button type='button' onClick={() => appendPets({ name: '', animal: 'dog' })}>Click to add a dog</button>
+            </div>
           </FormControl>
 
           <input type="submit" onClick={handleSubmit(onSubmit)}/>
