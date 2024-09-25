@@ -1,9 +1,10 @@
 import { FormControl, FormControlLabel, FormHelperText, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
 import { useEffect } from 'react';
-import { Controller, FormProvider, SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
+import { Controller, FormProvider, SubmitHandler, useForm } from 'react-hook-form'
+import { PetManager } from './PetManager';
 // import './App.css'
 
-type Foo = {
+export type Foo = {
   firstName: string;
   lastName: string;
   medicalProfile: {
@@ -30,11 +31,6 @@ function App() {
     formState: { errors },
     watch,
   } = methods;
-
-  const { fields: petFields, append: appendPets } = useFieldArray({
-    control,
-    name: 'pets',
-  });
 
   const onSubmit: SubmitHandler<Foo> = (data) => console.log(data);
 
@@ -66,17 +62,7 @@ function App() {
               )}
             />
             {errors.medicalProfile?.smoking && <FormHelperText>{errors.medicalProfile.smoking.message}</FormHelperText>}
-            <div>
-              {
-                petFields.map((petField, index) => (
-                  <div>
-                    Pet #{index + 1}
-                    <input key={petField.id} type='text' {...register(`pets.${index}.name`)}/>
-                  </div>
-                ))
-              }
-              <button type='button' onClick={() => appendPets({ name: '', animal: 'dog' })}>Click to add a dog</button>
-            </div>
+            <PetManager/>
           </FormControl>
 
           <input type="submit" onClick={handleSubmit(onSubmit)}/>
