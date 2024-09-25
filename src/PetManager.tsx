@@ -1,8 +1,14 @@
-import { useFieldArray, useFormContext } from 'react-hook-form'
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { Foo } from './App';
+import { Box, Button, FormControl, FormLabel, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+
+const defaultPet: Foo['pets'][0] = {
+  name: '',
+  animal: 'cat',
+};
 
 export const PetManager = () => {
-  const { control, register } = useFormContext<Foo>();
+  const { control, register, formState: { errors } } = useFormContext<Foo>();
   const { fields, append } = useFieldArray({
     control,
     name: 'pets',
@@ -11,15 +17,35 @@ export const PetManager = () => {
   return (
     <div>
       <h1>Pet Manager</h1>
+      <Box display='flex' flexDirection='column' gap={2}>
       {
         fields.map((field, index) => (
-          <div>
-            Pet #{index + 1}
-            <input key={field.id} type='text' {...register(`pets.${index}.name`, { required: true })}/>
-          </div>
+          <Box key={field.id} display='flex' alignItems='center' gap={2}>
+            <FormLabel>Pet #{index + 1}</FormLabel>
+            <TextField
+              label='Name'
+              type='text'
+              helperText={errors.pets?.[index] ? 'Give your pet a name!' : undefined}
+              {...register(`pets.${index}.name`, { required: true })}
+            />
+            <Controller
+              control={control}
+              name={`pets.${index}.animal`}
+              render={({ field }) => (
+                <FormControl>
+                  <InputLabel>Animal</InputLabel>
+                  <Select label='Animal' {...field}>
+                    <MenuItem value='dog'>Dog</MenuItem>
+                    <MenuItem value='cat'>Cat</MenuItem>
+                  </Select>
+                </FormControl>
+              )}
+            />
+          </Box>
         ))
       }
-      <button type='button' onClick={() => append({ name: '', animal: 'dog' })}>Click to add a dog</button>
+      </Box>
+      <Button variant='contained' onClick={() => append(defaultPet)}>Click to add a pet</Button>
     </div>
   )
 }

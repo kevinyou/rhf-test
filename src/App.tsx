@@ -12,7 +12,7 @@ export type Foo = {
   };
   pets: {
     name: string,
-    animal: 'dog';
+    animal: 'dog' | 'cat';
   }[];
 }
 
