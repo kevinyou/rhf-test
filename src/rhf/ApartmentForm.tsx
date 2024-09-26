@@ -1,62 +1,59 @@
 import { Button, FormControl, FormControlLabel, FormHelperText, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
-import { useEffect } from 'react';
-import { Controller, FormProvider, SubmitHandler, useForm } from 'react-hook-form'
-import { PetManager } from './PetManager';
+import { Form, Formik, getIn, useFormikContext } from 'formik';
 import { ApartmentApplication } from '../apartmentForm';
+import { PetManager } from './PetManager';
 // import './App.css'
 
-export const ApartmentForm = () => {
-  const methods = useForm<ApartmentApplication>({
-    defaultValues: {
-      firstName: 'Bob',
-      medicalProfile: {},
-      pets: [],
-    }
-  });
-  const {
-    control,
-    register,
-    handleSubmit,
-    formState: { errors },
-    watch,
-  } = methods;
+const NameFields = () => {
+  const formik = useFormikContext<ApartmentApplication>();
+  return (
+    <>
+      <TextField label='First Name' {...formik.getFieldProps('firstName')}/>
+      <TextField label='Last Name' {...formik.getFieldProps('lastName')} />
+    </>
+  )
+}
 
-  const onSubmit: SubmitHandler<ApartmentApplication> = (data) => console.log(data);
-
-   useEffect(() => {
-    const subscription = watch((value, { name, type }) =>
-      console.log(value, name, type)
-    )
-    return () => subscription.unsubscribe()
-  }, [watch])
+const MedicalProfileField = () => {
+  const formik = useFormikContext<ApartmentApplication>();
 
   return (
-    <FormProvider {...methods}>
+    <FormControl>
+      <FormLabel>Do you Smoke?</FormLabel>
+      <RadioGroup {...formik.getFieldProps('medicalProfile.smoking')}>
+        <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+        <FormControlLabel value="no" control={<Radio />} label="No" />
+      </RadioGroup>
+      { getIn(formik.errors, 'medicalProfile.smoking') && <FormHelperText>{getIn(formik.errors, 'medicalProfile.smoking')}</FormHelperText>}
+    </FormControl>
+  )
+}
+
+export const ApartmentForm = () => {
+  const onSubmit = (data: any) => console.log(data);
+
+  return (
+    <Formik
+      initialValues={{
+        firstName: '',
+        lastName: '',
+        medicalProfile: {
+          smoking: null,
+        },
+        pets: [],
+      }}
+      onSubmit={onSubmit}
+    >
       <div>
-        <form>
-          <TextField label='First Name' {...register('firstName')}/>
-          <TextField label='Last Name' {...register('lastName', { required: true })} helperText={errors.lastName && 'This field is required'} />
+        <Form>
+          <NameFields />
 
-          <FormControl>
-            <FormLabel>Do you Smoke?</FormLabel>
-            <Controller
-              name="medicalProfile.smoking"
-              control={control}
-              rules={{ required: 'This field is required' }}
-              render={({ field }) => (
-                <RadioGroup {...field}>
-                  <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                  <FormControlLabel value="no" control={<Radio />} label="No" />
-                </RadioGroup>
-              )}
-            />
-            {errors.medicalProfile?.smoking && <FormHelperText>{errors.medicalProfile.smoking.message}</FormHelperText>}
-            <PetManager/>
-          </FormControl>
+          <MedicalProfileField/>
+          <PetManager />
 
-          <Button onClick={handleSubmit(onSubmit)}>Submit</Button>
-        </form>
+          <Button type='submit'>Submit</Button>
+        </Form>
       </div>
-    </FormProvider>
+    </Formik>
   )
 }
