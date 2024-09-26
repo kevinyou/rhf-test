@@ -1,5 +1,6 @@
 import Ajv, { JSONSchemaType } from 'ajv';
 import { JSONSchemaBridge } from 'uniforms-bridge-json-schema';
+import { RadioField } from 'uniforms-mui';
 
 type ApartmentApplication = {
   firstName: string;
@@ -22,7 +23,22 @@ const schema: JSONSchemaType<ApartmentApplication> = {
     medicalProfile: {
       type: 'object',
       properties: {
-        smoking: { type: 'string', enum: ['yes', 'no']  }
+        smoking: {
+          type: 'string',
+          options: [
+            {
+              label: 'Yes',
+              value: 'yes',
+            },
+            {
+              label: 'No',
+              value: 'no',
+            },
+          ],
+          uniforms: {
+            component: RadioField,
+          }
+        }
       },
       required: ['smoking'],
     },
@@ -32,7 +48,19 @@ const schema: JSONSchemaType<ApartmentApplication> = {
         type: 'object',
         properties: {
           name: { type: 'string' },
-          animal: { type: 'string', enum: ['cat', 'dog'] },
+          animal: {
+            type: 'string',
+            options: [
+              {
+                label: 'Cat',
+                value: 'cat',
+              },
+              {
+                label: 'Dog',
+                value: 'dog',
+              },
+            ],
+          },
         },
         required: ['name', 'animal'],
       }
@@ -44,7 +72,7 @@ const schema: JSONSchemaType<ApartmentApplication> = {
 const ajc = new Ajv({
   allErrors: true,
   useDefaults: true,
-  keywords: ['uniforms'],
+  keywords: ['uniforms', 'options'],
 })
 
 function createValidator<T>(schema: JSONSchemaType<T>) {
