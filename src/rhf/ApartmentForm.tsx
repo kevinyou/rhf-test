@@ -1,6 +1,7 @@
 import { Button, FormControl, FormControlLabel, FormHelperText, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
 import { Form, Formik, getIn, useFormikContext } from 'formik';
 import { ApartmentApplication } from '../apartmentForm';
+import { PetManager } from './PetManager';
 // import './App.css'
 
 const NameFields = () => {
@@ -48,6 +49,7 @@ export const ApartmentForm = () => {
           <NameFields />
 
           <MedicalProfileField/>
+          <PetManager />
 
           <Button type='submit'>Submit</Button>
         </Form>
