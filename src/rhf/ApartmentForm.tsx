@@ -1,4 +1,4 @@
-import { FormControl, FormControlLabel, FormHelperText, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
+import { Button, FormControl, FormControlLabel, FormHelperText, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
 import { useEffect } from 'react';
 import { Controller, FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { PetManager } from './PetManager';
@@ -54,7 +54,7 @@ export const ApartmentForm = () => {
             <PetManager/>
           </FormControl>
 
-          <input type="submit" onClick={handleSubmit(onSubmit)}/>
+          <Button onClick={handleSubmit(onSubmit)}>Submit</Button>
         </form>
       </div>
     </FormProvider>
