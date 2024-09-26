@@ -1,8 +1,10 @@
-import { ApartmentForm } from './rhf/ApartmentForm';
+import { AutoForm } from 'uniforms-mui';
+import { bridge as schema } from './schema'
 
 function App() {
   return (
-    <ApartmentForm/>
+    <AutoForm schema={schema} onSubmit={console.log}>
+    </AutoForm>
   )
 }
 
