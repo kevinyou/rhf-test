@@ -1,19 +1,23 @@
 import { Box } from '@mui/material';
-import { connectField, HTMLFieldProps, useField } from 'uniforms';
-import { AutoField, NestField } from 'uniforms-mui';
+import {  filterDOMProps, HTMLFieldProps, useField } from 'uniforms';
+import { AutoField } from 'uniforms-mui';
 
 type PetFieldProps = HTMLFieldProps<string, HTMLDivElement>;
 
-const PetField = (props: PetFieldProps) => {
-    return <Box>
-        <h1>
-            {props.name}
-        </h1>
-        <Box>
-            <AutoField name='name' />
-            <AutoField name='animal' />
-        </Box>
-    </Box>;
+export const PetField = (props: PetFieldProps) => {
+    const [fieldProps] = useField(props.name, props);
+    return (
+        <div {...filterDOMProps(fieldProps)}>
+            <h1>
+               Pet #{
+                // array index being on .label is a bit weird. could getuse .name instead
+                fieldProps.label
+               }
+            </h1>
+            <Box>
+                <AutoField name='name' />
+                <AutoField name='animal' />
+            </Box>
+        </div>
+    );
 };
-
-export default connectField<PetFieldProps>(PetField);
