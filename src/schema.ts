@@ -1,6 +1,7 @@
 import Ajv, { JSONSchemaType } from 'ajv';
 import { JSONSchemaBridge } from 'uniforms-bridge-json-schema';
 import { RadioField } from 'uniforms-mui';
+import PetField from './PetField';
 
 type ApartmentApplication = {
   firstName: string;
@@ -63,7 +64,10 @@ const schema: JSONSchemaType<ApartmentApplication> = {
           },
         },
         required: ['name', 'animal'],
-      }
+        uniforms: {
+          component: PetField,
+        }
+      },
     }
   },
   required: ['lastName'],
