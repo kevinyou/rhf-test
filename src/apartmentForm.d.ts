@@ -2,7 +2,7 @@ export type ApartmentApplication = {
   firstName: string;
   lastName: string;
   medicalProfile: {
-    smoking: 'yes' | 'no';
+    smoking: 'yes' | 'no' | null; // only null when filling out, not when submitting
   };
   pets: {
     name: string,
