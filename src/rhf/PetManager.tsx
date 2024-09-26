@@ -1,14 +1,14 @@
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
-import { Foo } from './App';
 import { Box, Button, FormControl, FormLabel, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { ApartmentApplication } from '../apartmentForm'
 
-const defaultPet: Foo['pets'][0] = {
+const defaultPet: ApartmentApplication['pets'][0] = {
   name: '',
   animal: 'cat',
 };
 
 export const PetManager = () => {
-  const { control, register, formState: { errors } } = useFormContext<Foo>();
+  const { control, register, formState: { errors } } = useFormContext<ApartmentApplication>();
   const { fields, append } = useFieldArray({
     control,
     name: 'pets',
