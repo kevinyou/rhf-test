@@ -1,6 +1,7 @@
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
-import { Box, Button, FormControl, FormLabel, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { useFieldArray, useFormContext } from 'react-hook-form'
+import { Box, Button, FormLabel  } from '@mui/material';
 import { ApartmentApplication } from '../apartmentForm'
+import { SelectElement, TextFieldElement } from 'react-hook-form-mui';
 
 const defaultPet: ApartmentApplication['pets'][0] = {
   name: '',
@@ -8,7 +9,7 @@ const defaultPet: ApartmentApplication['pets'][0] = {
 };
 
 export const PetManager = () => {
-  const { control, register, formState: { errors } } = useFormContext<ApartmentApplication>();
+  const { control } = useFormContext<ApartmentApplication>();
   const { fields, append } = useFieldArray({
     control,
     name: 'pets',
@@ -22,24 +23,24 @@ export const PetManager = () => {
         fields.map((field, index) => (
           <Box key={field.id} display='flex' alignItems='center' gap={2}>
             <FormLabel>Pet #{index + 1}</FormLabel>
-            <TextField
+            <TextFieldElement
               label='Name'
-              type='text'
-              helperText={errors.pets?.[index] ? 'Give your pet a name!' : undefined}
-              {...register(`pets.${index}.name`, { required: true })}
+              name={`pets.${index}.name`}
+              required
             />
-            <Controller
-              control={control}
+            <SelectElement
+              label='Animal'
               name={`pets.${index}.animal`}
-              render={({ field }) => (
-                <FormControl>
-                  <InputLabel>Animal</InputLabel>
-                  <Select label='Animal' {...field}>
-                    <MenuItem value='dog'>Dog</MenuItem>
-                    <MenuItem value='cat'>Cat</MenuItem>
-                  </Select>
-                </FormControl>
-              )}
+              options={[
+                {
+                  id: 'dog',
+                  label: 'Dog',
+                },
+                {
+                  id: 'cat',
+                  label: 'Cat',
+                },
+              ]}
             />
           </Box>
         ))
