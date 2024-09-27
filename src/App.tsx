@@ -5,7 +5,8 @@ import { Button } from '@mui/material';
 
 function App() {
   const [showPets, setShowPets] = useState(false);
-  const bridge = useMemo(() => getBridge({ showPets }), [showPets]);
+  const numberCustomFields = ['age', 'income', 'height'];
+  const bridge = useMemo(() => getBridge({ showPets, numberCustomFields }), [showPets]);
   return (
     <div>
       <Button onClick={() => setShowPets(!showPets)}>Toggle Pet Manager</Button>

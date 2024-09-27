@@ -13,10 +13,16 @@ type ApartmentApplication = {
     name: string,
     animal: 'dog' | 'cat';
   }[] | never; // for conditional fields, use never instead of optional so JSONSchemaType is happy
+  numberCustomFields: Record<string, number>;
 }
 
 
-export const getBridge = ({ showPets }: { showPets: boolean; }) => {
+export const getBridge = (
+  { showPets, numberCustomFields }: {
+    showPets: boolean;
+    numberCustomFields: string[];
+  }
+) => {
   const schema = {
     title: 'Apartment Application',
     type: 'object',
@@ -75,9 +81,19 @@ export const getBridge = ({ showPets }: { showPets: boolean; }) => {
           }
         }
       ),
+      numberCustomFields: {
+        type: 'object',
+        properties: {
+        },
+        required: [],
+      },
     },
     required: ['lastName'],
   } as JSONSchemaType<ApartmentApplication>;
+
+  numberCustomFields.forEach((key) => {
+    schema.properties.numberCustomFields.properties[key] = { type: 'number' };
+  })
 
   const ajc = new Ajv({
     allErrors: true,
